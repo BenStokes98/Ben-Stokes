@@ -1,0 +1,641 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-comment">{-|
+Module      : Types
+Copyright   : (c) Ben Stokes, 2022
+                  Navid Sheikh, 2022
+-}</span><span>
+</span><span id="line-6"></span><span>
+</span><span id="line-7"></span><span class="hs-pragma">{-# LANGUAGE DeriveGeneric   #-}</span><span>
+</span><span id="line-8"></span><span class="hs-pragma">{-# LANGUAGE DeriveAnyClass, TypeFamilies #-}</span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Types</span><span> </span><span class="hs-special">(</span><span>
+</span><span id="line-12"></span><span>    </span><span class="annot"><a href="Types.html#Entry"><span class="hs-identifier">Entry</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-13"></span><span>    </span><span class="annot"><a href="Types.html#Program"><span class="hs-identifier">Program</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-14"></span><span>    </span><span class="annot"><a href="Types.html#Summary"><span class="hs-identifier">Summary</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-15"></span><span>    </span><span class="annot"><a href="Types.html#Record"><span class="hs-identifier">Record</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-16"></span><span>    </span><span class="annot"><a href="Types.html#ShowWithDate"><span class="hs-identifier">ShowWithDate</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-17"></span><span>    </span><span class="annot"><a href="Types.html#RandomSummary"><span class="hs-identifier">RandomSummary</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-18"></span><span>    </span><span class="annot"><a href="Types.html#renameFields"><span class="hs-identifier">renameFields</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-19"></span><span>    </span><span class="annot"><a href="Types.html#customOptions"><span class="hs-identifier">customOptions</span></a></span><span>
+</span><span id="line-20"></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-21"></span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- | import the necessary libraries, data type and function </span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Aeson</span></span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Database.SQLite.Simple.FromRow</span></span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Database.SQLite.Simple.ToRow</span></span><span>
+</span><span id="line-27"></span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- * Data Type</span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- | The Entry data type is used to create rows in the entries table.</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- Use case : Database.createRecord</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">data</span><span> </span><span id="Entry"><span class="annot"><a href="Types.html#Entry"><span class="hs-identifier hs-var">Entry</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Entry"><span class="annot"><a href="Types.html#Entry"><span class="hs-identifier hs-var">Entry</span></a></span></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-33"></span><span>    </span><span id="weight_"><span class="annot"><span class="annottext">Entry -&gt; Maybe Int
+</span><a href="Types.html#weight_"><span class="hs-identifier hs-var hs-var">weight_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>  </span><span>
+</span><span id="line-34"></span><span>    </span><span id="runtime_"><span class="annot"><span class="annottext">Entry -&gt; Maybe Int
+</span><a href="Types.html#runtime_"><span class="hs-identifier hs-var hs-var">runtime_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-35"></span><span>    </span><span id="premiered_"><span class="annot"><span class="annottext">Entry -&gt; Maybe String
+</span><a href="Types.html#premiered_"><span class="hs-identifier hs-var hs-var">premiered_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-36"></span><span>    </span><span id="ended_"><span class="annot"><span class="annottext">Entry -&gt; Maybe String
+</span><a href="Types.html#ended_"><span class="hs-identifier hs-var hs-var">ended_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-37"></span><span>    </span><span id="language_"><span class="annot"><span class="annottext">Entry -&gt; Maybe String
+</span><a href="Types.html#language_"><span class="hs-identifier hs-var hs-var">language_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-38"></span><span>    </span><span id="site_"><span class="annot"><span class="annottext">Entry -&gt; Maybe String
+</span><a href="Types.html#site_"><span class="hs-identifier hs-var hs-var">site_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-39"></span><span>    </span><span id="status_"><span class="annot"><span class="annottext">Entry -&gt; Maybe String
+</span><a href="Types.html#status_"><span class="hs-identifier hs-var hs-var">status_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-40"></span><span>    </span><span id="fk_program1"><span class="annot"><span class="annottext">Entry -&gt; Maybe Int
+</span><a href="Types.html#fk_program1"><span class="hs-identifier hs-var hs-var">fk_program1</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
+</span><span id="line-41"></span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679111467"><span id="local-6989586621679111469"><span id="local-6989586621679111484"><span class="annot"><span class="annottext">Int -&gt; Entry -&gt; ShowS
+[Entry] -&gt; ShowS
+Entry -&gt; String
+(Int -&gt; Entry -&gt; ShowS)
+-&gt; (Entry -&gt; String) -&gt; ([Entry] -&gt; ShowS) -&gt; Show Entry
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [Entry] -&gt; ShowS
+$cshowList :: [Entry] -&gt; ShowS
+show :: Entry -&gt; String
+$cshow :: Entry -&gt; String
+showsPrec :: Int -&gt; Entry -&gt; ShowS
+$cshowsPrec :: Int -&gt; Entry -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- | The Program data type is used to support the conversion for SQL operations.</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- The Program data type is used to create rows in the program table.</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- Use case : Database.queryProgramAllEntries,  Database.queryProgramSummary </span><span>
+</span><span id="line-48"></span><span class="hs-keyword">data</span><span> </span><span id="Program"><span class="annot"><a href="Types.html#Program"><span class="hs-identifier hs-var">Program</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Program"><span class="annot"><a href="Types.html#Program"><span class="hs-identifier hs-var">Program</span></a></span></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-49"></span><span>    </span><span id="id_"><span class="annot"><span class="annottext">Program -&gt; Maybe Int
+</span><a href="Types.html#id_"><span class="hs-identifier hs-var hs-var">id_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-50"></span><span>    </span><span id="program_"><span class="annot"><span class="annottext">Program -&gt; String
+</span><a href="Types.html#program_"><span class="hs-identifier hs-var hs-var">program_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-51"></span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679111448"><span id="local-6989586621679111450"><span id="local-6989586621679111457"><span class="annot"><span class="annottext">Int -&gt; Program -&gt; ShowS
+[Program] -&gt; ShowS
+Program -&gt; String
+(Int -&gt; Program -&gt; ShowS)
+-&gt; (Program -&gt; String) -&gt; ([Program] -&gt; ShowS) -&gt; Show Program
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [Program] -&gt; ShowS
+$cshowList :: [Program] -&gt; ShowS
+show :: Program -&gt; String
+$cshow :: Program -&gt; String
+showsPrec :: Int -&gt; Program -&gt; ShowS
+$cshowsPrec :: Int -&gt; Program -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span>
+</span><span id="line-53"></span><span>
+</span><span id="line-54"></span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- | The Summary data type is used to support the conversion for SQL operations.</span><span>
+</span><span id="line-56"></span><span class="hs-comment">--</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- The Summary data type is used to create rows in the summary table.</span><span>
+</span><span id="line-58"></span><span class="hs-comment">--</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- Use case : Database.createSummary,  Database.query5RandomPrograms</span><span>
+</span><span id="line-60"></span><span class="hs-keyword">data</span><span> </span><span id="Summary"><span class="annot"><a href="Types.html#Summary"><span class="hs-identifier hs-var">Summary</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Summary"><span class="annot"><a href="Types.html#Summary"><span class="hs-identifier hs-var">Summary</span></a></span></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-61"></span><span>    </span><span id="summary_"><span class="annot"><span class="annottext">Summary -&gt; Maybe String
+</span><a href="Types.html#summary_"><span class="hs-identifier hs-var hs-var">summary_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-62"></span><span>    </span><span id="fk_program2"><span class="annot"><span class="annottext">Summary -&gt; Maybe Int
+</span><a href="Types.html#fk_program2"><span class="hs-identifier hs-var hs-var">fk_program2</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
+</span><span id="line-63"></span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679111434"><span id="local-6989586621679111436"><span id="local-6989586621679111443"><span class="annot"><span class="annottext">Int -&gt; Summary -&gt; ShowS
+[Summary] -&gt; ShowS
+Summary -&gt; String
+(Int -&gt; Summary -&gt; ShowS)
+-&gt; (Summary -&gt; String) -&gt; ([Summary] -&gt; ShowS) -&gt; Show Summary
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [Summary] -&gt; ShowS
+$cshowList :: [Summary] -&gt; ShowS
+show :: Summary -&gt; String
+$cshow :: Summary -&gt; String
+showsPrec :: Int -&gt; Summary -&gt; ShowS
+$cshowsPrec :: Int -&gt; Summary -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-64"></span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- | The RandomSummary data type is used to support the random mini game and SQL operaions.</span><span>
+</span><span id="line-66"></span><span class="hs-comment">--</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- Use case : Database.queryProgramRandomSummary</span><span>
+</span><span id="line-68"></span><span class="hs-keyword">data</span><span> </span><span id="RandomSummary"><span class="annot"><a href="Types.html#RandomSummary"><span class="hs-identifier hs-var">RandomSummary</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="RandomSummary"><span class="annot"><a href="Types.html#RandomSummary"><span class="hs-identifier hs-var">RandomSummary</span></a></span></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-69"></span><span>    </span><span id="guess_summary"><span class="annot"><span class="annottext">RandomSummary -&gt; Maybe String
+</span><a href="Types.html#guess_summary"><span class="hs-identifier hs-var hs-var">guess_summary</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-70"></span><span>    </span><span id="guess_status"><span class="annot"><span class="annottext">RandomSummary -&gt; Maybe String
+</span><a href="Types.html#guess_status"><span class="hs-identifier hs-var hs-var">guess_status</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-71"></span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679111420"><span id="local-6989586621679111422"><span id="local-6989586621679111428"><span class="annot"><span class="annottext">Int -&gt; RandomSummary -&gt; ShowS
+[RandomSummary] -&gt; ShowS
+RandomSummary -&gt; String
+(Int -&gt; RandomSummary -&gt; ShowS)
+-&gt; (RandomSummary -&gt; String)
+-&gt; ([RandomSummary] -&gt; ShowS)
+-&gt; Show RandomSummary
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [RandomSummary] -&gt; ShowS
+$cshowList :: [RandomSummary] -&gt; ShowS
+show :: RandomSummary -&gt; String
+$cshow :: RandomSummary -&gt; String
+showsPrec :: Int -&gt; RandomSummary -&gt; ShowS
+$cshowsPrec :: Int -&gt; RandomSummary -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-72"></span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- | The ShowWithDate data type is used to support SQL operaions that includes dates.</span><span>
+</span><span id="line-74"></span><span class="hs-comment">--</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- Use case : Database.queryAllProgramEnded, Database.queryRunningProgram, Database.queryProgramPremieredDate</span><span>
+</span><span id="line-76"></span><span class="hs-keyword">data</span><span> </span><span id="ShowWithDate"><span class="annot"><a href="Types.html#ShowWithDate"><span class="hs-identifier hs-var">ShowWithDate</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ShowWithDate"><span class="annot"><a href="Types.html#ShowWithDate"><span class="hs-identifier hs-var">ShowWithDate</span></a></span></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-77"></span><span>    </span><span id="show_id"><span class="annot"><span class="annottext">ShowWithDate -&gt; Maybe Int
+</span><a href="Types.html#show_id"><span class="hs-identifier hs-var hs-var">show_id</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-78"></span><span>    </span><span id="show_title"><span class="annot"><span class="annottext">ShowWithDate -&gt; String
+</span><a href="Types.html#show_title"><span class="hs-identifier hs-var hs-var">show_title</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-79"></span><span>    </span><span id="show_date"><span class="annot"><span class="annottext">ShowWithDate -&gt; Maybe String
+</span><a href="Types.html#show_date"><span class="hs-identifier hs-var hs-var">show_date</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-80"></span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679111403"><span id="local-6989586621679111405"><span id="local-6989586621679111413"><span class="annot"><span class="annottext">Int -&gt; ShowWithDate -&gt; ShowS
+[ShowWithDate] -&gt; ShowS
+ShowWithDate -&gt; String
+(Int -&gt; ShowWithDate -&gt; ShowS)
+-&gt; (ShowWithDate -&gt; String)
+-&gt; ([ShowWithDate] -&gt; ShowS)
+-&gt; Show ShowWithDate
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [ShowWithDate] -&gt; ShowS
+$cshowList :: [ShowWithDate] -&gt; ShowS
+show :: ShowWithDate -&gt; String
+$cshow :: ShowWithDate -&gt; String
+showsPrec :: Int -&gt; ShowWithDate -&gt; ShowS
+$cshowsPrec :: Int -&gt; ShowWithDate -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-81"></span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- | Used to convert raw json data into readable data type in Haskell</span><span>
+</span><span id="line-83"></span><span class="hs-comment">--</span><span>
+</span><span id="line-84"></span><span class="hs-comment">--  Use Case: Database.saveRecordsEntries, Database.saveRecordsSummary</span><span>
+</span><span id="line-85"></span><span>
+</span><span id="line-86"></span><span id="local-6989586621679111401"><span id="local-6989586621679111402"></span></span><span class="hs-keyword">data</span><span> </span><span id="Record"><span class="annot"><a href="Types.html#Record"><span class="hs-identifier hs-var">Record</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Record"><span class="annot"><a href="Types.html#Record"><span class="hs-identifier hs-var">Record</span></a></span></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-87"></span><span>    </span><span id="weight"><span class="annot"><span class="annottext">Record -&gt; Maybe Int
+</span><a href="Types.html#weight"><span class="hs-identifier hs-var hs-var">weight</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-88"></span><span>    </span><span id="runtime"><span class="annot"><span class="annottext">Record -&gt; Maybe Int
+</span><a href="Types.html#runtime"><span class="hs-identifier hs-var hs-var">runtime</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-89"></span><span>    </span><span id="premiered"><span class="annot"><span class="annottext">Record -&gt; Maybe String
+</span><a href="Types.html#premiered"><span class="hs-identifier hs-var hs-var">premiered</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-90"></span><span>    </span><span id="ended"><span class="annot"><span class="annottext">Record -&gt; Maybe String
+</span><a href="Types.html#ended"><span class="hs-identifier hs-var hs-var">ended</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-91"></span><span>    </span><span id="language"><span class="annot"><span class="annottext">Record -&gt; Maybe String
+</span><a href="Types.html#language"><span class="hs-identifier hs-var hs-var">language</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-92"></span><span>    </span><span id="site"><span class="annot"><span class="annottext">Record -&gt; Maybe String
+</span><a href="Types.html#site"><span class="hs-identifier hs-var hs-var">site</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-93"></span><span>    </span><span id="status"><span class="annot"><span class="annottext">Record -&gt; Maybe String
+</span><a href="Types.html#status"><span class="hs-identifier hs-var hs-var">status</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-94"></span><span>    </span><span id="program"><span class="annot"><span class="annottext">Record -&gt; String
+</span><a href="Types.html#program"><span class="hs-identifier hs-var hs-var">program</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-95"></span><span>    </span><span id="summary"><span class="annot"><span class="annottext">Record -&gt; Maybe String
+</span><a href="Types.html#summary"><span class="hs-identifier hs-var hs-var">summary</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-96"></span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679111373"><span id="local-6989586621679111375"><span id="local-6989586621679111389"><span class="annot"><span class="annottext">Int -&gt; Record -&gt; ShowS
+[Record] -&gt; ShowS
+Record -&gt; String
+(Int -&gt; Record -&gt; ShowS)
+-&gt; (Record -&gt; String) -&gt; ([Record] -&gt; ShowS) -&gt; Show Record
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [Record] -&gt; ShowS
+$cshowList :: [Record] -&gt; ShowS
+show :: Record -&gt; String
+$cshow :: Record -&gt; String
+showsPrec :: Int -&gt; Record -&gt; ShowS
+$cshowsPrec :: Int -&gt; Record -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">(forall x. Record -&gt; Rep Record x)
+-&gt; (forall x. Rep Record x -&gt; Record) -&gt; Generic Record
+forall x. Rep Record x -&gt; Record
+forall x. Record -&gt; Rep Record x
+forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+$cto :: forall x. Rep Record x -&gt; Record
+$cfrom :: forall x. Record -&gt; Rep Record x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-97"></span><span>
+</span><span id="line-98"></span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- * Constructors</span><span>
+</span><span id="line-100"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromRow</span></span><span> </span><span class="annot"><a href="Types.html#Record"><span class="hs-identifier hs-type">Record</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-101"></span><span>    </span><span id="local-6989586621679111339"><span class="annot"><span class="annottext">fromRow :: RowParser Record
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">fromRow</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe Int
+-&gt; Maybe Int
+-&gt; Maybe String
+-&gt; Maybe String
+-&gt; Maybe String
+-&gt; Maybe String
+-&gt; Maybe String
+-&gt; String
+-&gt; Maybe String
+-&gt; Record
+</span><a href="Types.html#Record"><span class="hs-identifier hs-var">Record</span></a></span><span> </span><span class="annot"><span class="annottext">(Maybe Int
+ -&gt; Maybe Int
+ -&gt; Maybe String
+ -&gt; Maybe String
+ -&gt; Maybe String
+ -&gt; Maybe String
+ -&gt; Maybe String
+ -&gt; String
+ -&gt; Maybe String
+ -&gt; Record)
+-&gt; RowParser (Maybe Int)
+-&gt; RowParser
+     (Maybe Int
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; String
+      -&gt; Maybe String
+      -&gt; Record)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe Int)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser
+  (Maybe Int
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; String
+   -&gt; Maybe String
+   -&gt; Record)
+-&gt; RowParser (Maybe Int)
+-&gt; RowParser
+     (Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; String
+      -&gt; Maybe String
+      -&gt; Record)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe Int)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser
+  (Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; String
+   -&gt; Maybe String
+   -&gt; Record)
+-&gt; RowParser (Maybe String)
+-&gt; RowParser
+     (Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; String
+      -&gt; Maybe String
+      -&gt; Record)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser
+  (Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; String
+   -&gt; Maybe String
+   -&gt; Record)
+-&gt; RowParser (Maybe String)
+-&gt; RowParser
+     (Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; String
+      -&gt; Maybe String
+      -&gt; Record)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser
+  (Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; String
+   -&gt; Maybe String
+   -&gt; Record)
+-&gt; RowParser (Maybe String)
+-&gt; RowParser
+     (Maybe String -&gt; Maybe String -&gt; String -&gt; Maybe String -&gt; Record)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser
+  (Maybe String -&gt; Maybe String -&gt; String -&gt; Maybe String -&gt; Record)
+-&gt; RowParser (Maybe String)
+-&gt; RowParser (Maybe String -&gt; String -&gt; Maybe String -&gt; Record)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String -&gt; String -&gt; Maybe String -&gt; Record)
+-&gt; RowParser (Maybe String)
+-&gt; RowParser (String -&gt; Maybe String -&gt; Record)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser (String -&gt; Maybe String -&gt; Record)
+-&gt; RowParser String -&gt; RowParser (Maybe String -&gt; Record)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser String
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String -&gt; Record)
+-&gt; RowParser (Maybe String) -&gt; RowParser Record
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span>
+</span><span id="line-102"></span><span>
+</span><span id="line-103"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromRow</span></span><span> </span><span class="annot"><a href="Types.html#Program"><span class="hs-identifier hs-type">Program</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-104"></span><span>    </span><span id="local-6989586621679111328"><span class="annot"><span class="annottext">fromRow :: RowParser Program
+</span><a href="#local-6989586621679111328"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromRow</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe Int -&gt; String -&gt; Program
+</span><a href="Types.html#Program"><span class="hs-identifier hs-var">Program</span></a></span><span> </span><span class="annot"><span class="annottext">(Maybe Int -&gt; String -&gt; Program)
+-&gt; RowParser (Maybe Int) -&gt; RowParser (String -&gt; Program)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe Int)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser (String -&gt; Program)
+-&gt; RowParser String -&gt; RowParser Program
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser String
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span>
+</span><span id="line-105"></span><span>
+</span><span id="line-106"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromRow</span></span><span> </span><span class="annot"><a href="Types.html#ShowWithDate"><span class="hs-identifier hs-type">ShowWithDate</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-107"></span><span>    </span><span id="local-6989586621679111318"><span class="annot"><span class="annottext">fromRow :: RowParser ShowWithDate
+</span><a href="#local-6989586621679111318"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromRow</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe Int -&gt; String -&gt; Maybe String -&gt; ShowWithDate
+</span><a href="Types.html#ShowWithDate"><span class="hs-identifier hs-var">ShowWithDate</span></a></span><span> </span><span class="annot"><span class="annottext">(Maybe Int -&gt; String -&gt; Maybe String -&gt; ShowWithDate)
+-&gt; RowParser (Maybe Int)
+-&gt; RowParser (String -&gt; Maybe String -&gt; ShowWithDate)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe Int)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser (String -&gt; Maybe String -&gt; ShowWithDate)
+-&gt; RowParser String -&gt; RowParser (Maybe String -&gt; ShowWithDate)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser String
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String -&gt; ShowWithDate)
+-&gt; RowParser (Maybe String) -&gt; RowParser ShowWithDate
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span>
+</span><span id="line-108"></span><span>
+</span><span id="line-109"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromRow</span></span><span> </span><span class="annot"><a href="Types.html#Summary"><span class="hs-identifier hs-type">Summary</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-110"></span><span>    </span><span id="local-6989586621679111309"><span class="annot"><span class="annottext">fromRow :: RowParser Summary
+</span><a href="#local-6989586621679111309"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromRow</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe String -&gt; Maybe Int -&gt; Summary
+</span><a href="Types.html#Summary"><span class="hs-identifier hs-var">Summary</span></a></span><span> </span><span class="annot"><span class="annottext">(Maybe String -&gt; Maybe Int -&gt; Summary)
+-&gt; RowParser (Maybe String) -&gt; RowParser (Maybe Int -&gt; Summary)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe Int -&gt; Summary)
+-&gt; RowParser (Maybe Int) -&gt; RowParser Summary
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe Int)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span>
+</span><span id="line-111"></span><span>
+</span><span id="line-112"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromRow</span></span><span> </span><span class="annot"><a href="Types.html#RandomSummary"><span class="hs-identifier hs-type">RandomSummary</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-113"></span><span>    </span><span id="local-6989586621679111301"><span class="annot"><span class="annottext">fromRow :: RowParser RandomSummary
+</span><a href="#local-6989586621679111301"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromRow</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe String -&gt; Maybe String -&gt; RandomSummary
+</span><a href="Types.html#RandomSummary"><span class="hs-identifier hs-var">RandomSummary</span></a></span><span> </span><span class="annot"><span class="annottext">(Maybe String -&gt; Maybe String -&gt; RandomSummary)
+-&gt; RowParser (Maybe String)
+-&gt; RowParser (Maybe String -&gt; RandomSummary)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String -&gt; RandomSummary)
+-&gt; RowParser (Maybe String) -&gt; RowParser RandomSummary
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span>
+</span><span id="line-114"></span><span>
+</span><span id="line-115"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromRow</span></span><span> </span><span class="annot"><a href="Types.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-116"></span><span>    </span><span id="local-6989586621679111280"><span class="annot"><span class="annottext">fromRow :: RowParser Entry
+</span><a href="#local-6989586621679111280"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromRow</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe Int
+-&gt; Maybe Int
+-&gt; Maybe String
+-&gt; Maybe String
+-&gt; Maybe String
+-&gt; Maybe String
+-&gt; Maybe String
+-&gt; Maybe Int
+-&gt; Entry
+</span><a href="Types.html#Entry"><span class="hs-identifier hs-var">Entry</span></a></span><span> </span><span class="annot"><span class="annottext">(Maybe Int
+ -&gt; Maybe Int
+ -&gt; Maybe String
+ -&gt; Maybe String
+ -&gt; Maybe String
+ -&gt; Maybe String
+ -&gt; Maybe String
+ -&gt; Maybe Int
+ -&gt; Entry)
+-&gt; RowParser (Maybe Int)
+-&gt; RowParser
+     (Maybe Int
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe Int
+      -&gt; Entry)
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe Int)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser
+  (Maybe Int
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe Int
+   -&gt; Entry)
+-&gt; RowParser (Maybe Int)
+-&gt; RowParser
+     (Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe Int
+      -&gt; Entry)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe Int)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser
+  (Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe Int
+   -&gt; Entry)
+-&gt; RowParser (Maybe String)
+-&gt; RowParser
+     (Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe String
+      -&gt; Maybe Int
+      -&gt; Entry)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser
+  (Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe String
+   -&gt; Maybe Int
+   -&gt; Entry)
+-&gt; RowParser (Maybe String)
+-&gt; RowParser
+     (Maybe String
+      -&gt; Maybe String -&gt; Maybe String -&gt; Maybe Int -&gt; Entry)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser
+  (Maybe String
+   -&gt; Maybe String -&gt; Maybe String -&gt; Maybe Int -&gt; Entry)
+-&gt; RowParser (Maybe String)
+-&gt; RowParser (Maybe String -&gt; Maybe String -&gt; Maybe Int -&gt; Entry)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String -&gt; Maybe String -&gt; Maybe Int -&gt; Entry)
+-&gt; RowParser (Maybe String)
+-&gt; RowParser (Maybe String -&gt; Maybe Int -&gt; Entry)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String -&gt; Maybe Int -&gt; Entry)
+-&gt; RowParser (Maybe String) -&gt; RowParser (Maybe Int -&gt; Entry)
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe String)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe Int -&gt; Entry)
+-&gt; RowParser (Maybe Int) -&gt; RowParser Entry
+forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">RowParser (Maybe Int)
+forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span>
+</span><span id="line-117"></span><span>
+</span><span id="line-118"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToRow</span></span><span> </span><span class="annot"><a href="Types.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-119"></span><span>    </span><span id="local-6989586621679111261"><span class="annot"><span class="annottext">toRow :: Entry -&gt; [SQLData]
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">toRow</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Types.html#Entry"><span class="hs-identifier hs-type">Entry</span></a></span><span> </span><span id="local-6989586621679111259"><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679111259"><span class="hs-identifier hs-var">w</span></a></span></span><span> </span><span id="local-6989586621679111258"><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679111258"><span class="hs-identifier hs-var">rt</span></a></span></span><span> </span><span id="local-6989586621679111257"><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111257"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621679111256"><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111256"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span id="local-6989586621679111255"><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111255"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621679111254"><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111254"><span class="hs-identifier hs-var">si</span></a></span></span><span> </span><span id="local-6989586621679111253"><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111253"><span class="hs-identifier hs-var">st</span></a></span></span><span> </span><span id="local-6989586621679111252"><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679111252"><span class="hs-identifier hs-var">fk_p1</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-120"></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Maybe Int, Maybe Int, Maybe String, Maybe String, Maybe String,
+ Maybe String, Maybe String, Maybe Int)
+-&gt; [SQLData]
+forall a. ToRow a =&gt; a -&gt; [SQLData]
+</span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679111259"><span class="hs-identifier hs-var">w</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679111258"><span class="hs-identifier hs-var">rt</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111257"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111256"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111255"><span class="hs-identifier hs-var">l</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111254"><span class="hs-identifier hs-var">si</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111253"><span class="hs-identifier hs-var">st</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679111252"><span class="hs-identifier hs-var">fk_p1</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-121"></span><span>
+</span><span id="line-122"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToRow</span></span><span> </span><span class="annot"><a href="Types.html#Summary"><span class="hs-identifier hs-type">Summary</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-123"></span><span>    </span><span id="local-6989586621679111243"><span class="annot"><span class="annottext">toRow :: Summary -&gt; [SQLData]
+</span><a href="#local-6989586621679111243"><span class="hs-identifier hs-var hs-var hs-var hs-var">toRow</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Types.html#Summary"><span class="hs-identifier hs-type">Summary</span></a></span><span> </span><span id="local-6989586621679111242"><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111242"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679111241"><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679111241"><span class="hs-identifier hs-var">fk_p2</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-124"></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Maybe String, Maybe Int) -&gt; [SQLData]
+forall a. ToRow a =&gt; a -&gt; [SQLData]
+</span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111242"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679111241"><span class="hs-identifier hs-var">fk_p2</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-125"></span><span>
+</span><span id="line-126"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToRow</span></span><span> </span><span class="annot"><a href="Types.html#RandomSummary"><span class="hs-identifier hs-type">RandomSummary</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-127"></span><span>    </span><span id="local-6989586621679111234"><span class="annot"><span class="annottext">toRow :: RandomSummary -&gt; [SQLData]
+</span><a href="#local-6989586621679111234"><span class="hs-identifier hs-var hs-var hs-var hs-var">toRow</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Types.html#RandomSummary"><span class="hs-identifier hs-type">RandomSummary</span></a></span><span> </span><span id="local-6989586621679111233"><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111233"><span class="hs-identifier hs-var">r_s</span></a></span></span><span> </span><span id="local-6989586621679111232"><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111232"><span class="hs-identifier hs-var">r_st</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-128"></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Maybe String, Maybe String) -&gt; [SQLData]
+forall a. ToRow a =&gt; a -&gt; [SQLData]
+</span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111233"><span class="hs-identifier hs-var">r_s</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111232"><span class="hs-identifier hs-var">r_st</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-129"></span><span>
+</span><span id="line-130"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToRow</span></span><span> </span><span class="annot"><a href="Types.html#Program"><span class="hs-identifier hs-type">Program</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-131"></span><span>    </span><span id="local-6989586621679111225"><span class="annot"><span class="annottext">toRow :: Program -&gt; [SQLData]
+</span><a href="#local-6989586621679111225"><span class="hs-identifier hs-var hs-var hs-var hs-var">toRow</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Types.html#Program"><span class="hs-identifier hs-type">Program</span></a></span><span> </span><span id="local-6989586621679111224"><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679111224"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621679111223"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679111223"><span class="hs-identifier hs-var">prog</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-132"></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Maybe Int, String) -&gt; [SQLData]
+forall a. ToRow a =&gt; a -&gt; [SQLData]
+</span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679111224"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679111223"><span class="hs-identifier hs-var">prog</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-133"></span><span>
+</span><span id="line-134"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToRow</span></span><span> </span><span class="annot"><a href="Types.html#ShowWithDate"><span class="hs-identifier hs-type">ShowWithDate</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-135"></span><span>    </span><span id="local-6989586621679111214"><span class="annot"><span class="annottext">toRow :: ShowWithDate -&gt; [SQLData]
+</span><a href="#local-6989586621679111214"><span class="hs-identifier hs-var hs-var hs-var hs-var">toRow</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Types.html#ShowWithDate"><span class="hs-identifier hs-type">ShowWithDate</span></a></span><span> </span><span id="local-6989586621679111213"><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679111213"><span class="hs-identifier hs-var">s_i</span></a></span></span><span> </span><span id="local-6989586621679111212"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679111212"><span class="hs-identifier hs-var">s_t</span></a></span></span><span> </span><span id="local-6989586621679111211"><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111211"><span class="hs-identifier hs-var">s_d</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-136"></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Maybe Int, String, Maybe String) -&gt; [SQLData]
+forall a. ToRow a =&gt; a -&gt; [SQLData]
+</span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Maybe Int
+</span><a href="#local-6989586621679111213"><span class="hs-identifier hs-var">s_i</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679111212"><span class="hs-identifier hs-var">s_t</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Maybe String
+</span><a href="#local-6989586621679111211"><span class="hs-identifier hs-var">s_d</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-137"></span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- * JSON Settings </span><span>
+</span><span id="line-139"></span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- | Rename certiain fields to imporove readibility and resolve naming ambiguity</span><span>
+</span><span id="line-141"></span><span class="annot"><a href="Types.html#renameFields"><span class="hs-identifier hs-type">renameFields</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-142"></span><span id="renameFields"><span class="annot"><span class="annottext">renameFields :: ShowS
+</span><a href="Types.html#renameFields"><span class="hs-identifier hs-var hs-var">renameFields</span></a></span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;program&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;name&quot;</span></span><span>
+</span><span id="line-143"></span><span class="annot"><a href="Types.html#renameFields"><span class="hs-identifier hs-var">renameFields</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;site&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;officialSite&quot;</span></span><span>
+</span><span id="line-144"></span><span class="annot"><a href="Types.html#renameFields"><span class="hs-identifier hs-var">renameFields</span></a></span><span> </span><span id="local-6989586621679111210"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679111210"><span class="hs-identifier hs-var">other</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679111210"><span class="hs-identifier hs-var">other</span></a></span><span>
+</span><span id="line-145"></span><span>
+</span><span id="line-146"></span><span class="hs-comment">-- | Setting default options for 'FromJSON' </span><span>
+</span><span id="line-147"></span><span class="hs-comment">--</span><span>
+</span><span id="line-148"></span><span class="hs-comment">-- omitNothingFields = True - Null values are now considered.</span><span>
+</span><span id="line-149"></span><span class="annot"><a href="Types.html#customOptions"><span class="hs-identifier hs-type">customOptions</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Options</span></span><span>
+</span><span id="line-150"></span><span id="customOptions"><span class="annot"><span class="annottext">customOptions :: Options
+</span><a href="Types.html#customOptions"><span class="hs-identifier hs-var hs-var">customOptions</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options
+</span><span class="hs-identifier hs-var">defaultOptions</span></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-151"></span><span>    </span><span class="annot"><span class="annottext">fieldLabelModifier :: ShowS
+</span><span class="hs-identifier hs-var">fieldLabelModifier</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ShowS
+</span><a href="Types.html#renameFields"><span class="hs-identifier hs-var">renameFields</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-152"></span><span>    </span><span class="annot"><span class="annottext">omitNothingFields :: Bool
+</span><span class="hs-identifier hs-var">omitNothingFields</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">True</span></span><span>
+</span><span id="line-153"></span><span class="hs-special">}</span><span>
+</span><span id="line-154"></span><span>
+</span><span id="line-155"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679111204"><span class="annot"><span class="hs-identifier hs-type">FromJSON</span></span><span> </span><span class="annot"><a href="Types.html#Record"><span class="hs-identifier hs-type">Record</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-156"></span><span>    </span><span id="local-6989586621679111055"><span class="annot"><span class="annottext">parseJSON :: Value -&gt; Parser Record
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">parseJSON</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Options -&gt; Value -&gt; Parser Record
+forall a.
+(Generic a, GFromJSON Zero (Rep a)) =&gt;
+Options -&gt; Value -&gt; Parser a
+</span><span class="hs-identifier hs-var">genericParseJSON</span></span><span> </span><span class="annot"><span class="annottext">Options
+</span><a href="Types.html#customOptions"><span class="hs-identifier hs-var">customOptions</span></a></span></pre></body></html>
